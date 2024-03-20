@@ -2,7 +2,7 @@ import { IsArray, IsDate, IsNumber, IsOptional, IsPositive, IsString, MinLength,
 
 export class CreateFilmDto {
     @IsString()
-    @MinLength(1)
+    @MinLength(1, {message: 'El titulo es muy corto'})
     title: string;
 
     @IsNumber()
