@@ -29,15 +29,30 @@ export class FilmsService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const {limit = 5, skip=0, order='ASC'} = paginationDto;
+    const {limit = 5, skip=0, order='ASC', query} = paginationDto;
 
-    return await this.filmsRepository.find({
-      skip,
-      take: limit,
-      order: {
-        episode_id: order as FindOptionsOrderValue
-      }
-    });
+    if (!query){
+      return await this.filmsRepository.find({
+        skip,
+        take: limit,
+        order: {
+          episode_id: order as FindOptionsOrderValue
+        }
+      });
+    } else{
+
+      let films : Film[];
+      const queryBuilder = this.filmsRepository.createQueryBuilder('film');
+      films = await queryBuilder
+        .where('LOWER(director) ilike :director', {director: `%${query.toLowerCase()} %`})
+        .orWhere('LOWER(title) ilike :title', {title: `%${query.toLowerCase()} %`})
+        .limit(limit)
+        .skip(skip)
+        .getMany();
+
+      return films;
+    }
+    
   }
 
   async findOne(id: string) {

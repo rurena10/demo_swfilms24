@@ -19,4 +19,7 @@ export class PaginationDto {
     @IsOptional()
     @IsIn(['ASC', 'DESC', 'asc', 'desc'])
     order?: string;
+
+    @IsOptional()
+    query?: string;
 }
